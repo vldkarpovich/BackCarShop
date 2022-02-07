@@ -1,10 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using MongoDB.Bson.Serialization.Attributes;
+using System.Collections.Generic;
 
 namespace BackCarShop.Models
 {
     public class Car
     {
-        public string location { get; set; }
-        public List<Vehicle> vehicles;
+        [BsonElement("location")]
+        public string Location { get; set; }
+        [BsonElement("vehicles")]
+        public List<Vehicle> Vehicles;
     }
 }

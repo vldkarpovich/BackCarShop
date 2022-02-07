@@ -1,10 +1,8 @@
-﻿using BackCarShop.Models;
+﻿using BackCarShop.Data.Models;
+using BackCarShop.Models;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
-using System.Text.Json;
 using System.Threading.Tasks;
-using System.Runtime;
 
 namespace BackCarShop.Controllers
 {
@@ -25,7 +23,11 @@ namespace BackCarShop.Controllers
             try
             {
                 var result = await _vehicleService.GetVehiclesAsync();
-                return Ok(result);
+                if (result != null)
+                {
+                    return Ok(result);
+                }
+                else { return new NotFoundResult(); }
             }
             catch (Exception ex)
             {
@@ -40,16 +42,10 @@ namespace BackCarShop.Controllers
         {
             try
             {
-                Vehicle vehicle1 = null;
-                var result = await _vehicleService.GetVehiclesAsync();
-                foreach (var vehicle in result)
+                var result = await _vehicleService.GetAllVehicleInfo(id);
+                if (result != null)
                 {
-                    if (vehicle._id == id)
-                    { vehicle1 = vehicle; }
-                }
-                if (vehicle1 != null)
-                {
-                    return Ok(vehicle1);
+                    return Ok(result);
                 }
                 else { return new NotFoundResult(); }
             }
@@ -62,26 +58,23 @@ namespace BackCarShop.Controllers
 
 
 
-        //[HttpPost]
-        //public async Task<>
-
-        //[HttpGet]
-        //public async Task<IActionResult> GetVehicles(string name)
-        //{
-        //    try
-        //    {
-        //        var result = await cars.GetVehiclesAsync(name);
-        //        //var json = JsonSerializer.Serialize(result);
-        //        var model = new VehicleList { Vehicles = result };
-        //        //return View(model);
-        //        return Ok(model);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        //var log = ex.Message;
-        //        return new BadRequestResult();
-        //    }
-        //}
+        [HttpPost]
+        public async Task<IActionResult> PostCreateOrder(OrderViewModel orderViewModel)
+        {
+            try
+            {
+                if (orderViewModel != null)
+                {
+                    await _vehicleService.CreateOrder(orderViewModel);
+                    return new OkResult();
+                }
+                else { return new NotFoundResult(); }
+            }
+            catch(Exception ex)
+            { 
+                return new BadRequestResult(); 
+            }
+        }
 
     }
 }

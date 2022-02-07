@@ -1,18 +1,23 @@
-﻿using System;
+﻿using MongoDB.Bson.Serialization.Attributes;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace BackCarShop.Models
 {
     public class Order
     {
-        public int _id { get; set; }
-        public List<Vehicle> orderListVehicle { get; set; }
-        public string firstName { get; set; }
-        public string lastName { get; set; }
-        public string adres { get; set; }
-        public string email { get; set; }
-        public double price { get; set; }
+        [BsonElement("_id")]
+        public int Id { get; set; }
+        [BsonElement("orderListVehicle")]
+        public List<Vehicle> OrderListVehicle { get; set; }
+        [BsonElement("firstName")]
+        public string FirstName { get; set; }
+        [BsonElement("lastName")]
+        public string LastName { get; set; }
+        [BsonElement("address")]
+        public string Address { get; set; }
+        [BsonElement("email")]
+        public string Email { get; set; }
+        [BsonElement("price")]
+        public double Price { get; set; }
     }
 }

@@ -1,15 +1,23 @@
-﻿using System;
+﻿using MongoDB.Bson.Serialization.Attributes;
+using System;
 
 namespace BackCarShop.Models
 {
     public class Vehicle
     {
-        public int _id { get; set; }
-        public string make { get; set; }
-        public string model { get; set; }
-        public int year_model { get; set; } 
-        public double price { get; set; }
-        public bool licensed { get; set; }
-        public DateTime date_added { get; set; }
+        [BsonElement("_id")]
+        public int Id { get; set; }
+        [BsonElement("make")]
+        public string Make { get; set; }
+        [BsonElement("model")]
+        public string Model { get; set; }
+        [BsonElement("year_model")]
+        public int Year_model { get; set; }
+        [BsonElement("price")]
+        public double Price { get; set; }
+        [BsonElement("licensed")]
+        public bool Licensed { get; set; }
+        [BsonElement("date_added")]
+        public DateTime Date_added { get; set; }
     }
 }

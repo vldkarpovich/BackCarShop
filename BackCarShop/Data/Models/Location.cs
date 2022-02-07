@@ -5,8 +5,9 @@ namespace BackCarShop.Models
 {
     public class Location
     {
-        public double lat { get; set; }
+        [BsonElement("lat")]
+        public double Lat { get; set; }
         [BsonElement("long")]
-        public double _long { get; set; }
+        public double Long { get; set; }
     }
 }
