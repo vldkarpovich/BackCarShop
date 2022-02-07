@@ -19,14 +19,6 @@ namespace BackCarShop.Controllers
             _vehicleService = vehicle;
         }
 
-
-        //// GET: api/<VehicleController>
-        //[HttpGet]
-        //public IEnumerable<string> Get()
-        //{
-        //    return new string[] { "value1", "value2" };
-        //}
-
         [HttpGet]
         public async Task<IActionResult> GetVehicles()
         {
@@ -67,6 +59,8 @@ namespace BackCarShop.Controllers
                 return new BadRequestResult();
             }
         }
+
+
 
         //[HttpPost]
         //public async Task<>

@@ -1,11 +1,13 @@
-﻿using System;
+﻿using BackCarShop.Models;
+using MongoDB.Driver;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace BackCarShop.Data.Infrastructure
 {
-    public class IDbContext
+    public interface IDbContext
     {
+        IMongoCollection<Warehouse> Warehouses { get; }
+        IMongoCollection<Order> Orders { get; }
+        void CreateConnection();
     }
 }

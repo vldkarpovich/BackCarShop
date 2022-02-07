@@ -1,3 +1,4 @@
+using BackCarShop.Data.Infrastructure;
 using BackCarShop.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -20,6 +21,7 @@ namespace BackCarShop
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddScoped<IVehicleService, VehicleService>();
+            services.AddScoped<IDbContext, DbContext>();
             services.AddControllers().AddNewtonsoftJson();
             services.AddCors();
         }

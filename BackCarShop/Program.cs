@@ -9,12 +9,6 @@ namespace BackCarShop
     {
         public static void Main(string[] args)
         {
-            BsonClassMap.RegisterClassMap<Location>(cm =>
-            {
-                cm.AutoMap();
-                cm.MapMember(l => l._long).SetElementName("long");
-            });
-
             CreateHostBuilder(args).Build().Run();
         }
 

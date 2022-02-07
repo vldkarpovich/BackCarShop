@@ -7,14 +7,12 @@ namespace BackCarShop.Models
 {
     public class Order
     {
+        public int _id { get; set; }
         public List<Vehicle> orderListVehicle { get; set; }
         public string firstName { get; set; }
         public string lastName { get; set; }
         public string adres { get; set; }
         public string email { get; set; }
-        public int price { get; set; }
-
-
-
+        public double price { get; set; }
     }
 }
