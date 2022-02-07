@@ -1,23 +1,25 @@
-﻿using MongoDB.Bson;
+﻿using Microsoft.Extensions.Configuration;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
+
 using System.Threading.Tasks;
 
 namespace BackCarShop.Models
 {
-    public class VehicleService
+    public class VehicleService : IVehicleService
     {
         IMongoDatabase database; // Data bases
         List<Vehicle> vehicles = new List<Vehicle>();
         List<Warehouse> warehouses = new List<Warehouse>();
 
-        public VehicleService() 
+        public VehicleService(IConfiguration configuration)
         {
             // string conection 
             //string connectionString = ConfigurationManager.ConnectionStrings["MongoDb"].ConnectionString;
-            string connectionString = "mongodb://localhost:27017/OlineShop";
+            string connectionString = configuration.GetConnectionString("MongoDb");
+            //string connectionString = "mongodb://localhost:27017/OlineShop";
             var connection = new MongoUrlBuilder(connectionString);
             // получаем клиента для взаимодействия с базой данных
             MongoClient client = new MongoClient(connectionString);
@@ -32,15 +34,15 @@ namespace BackCarShop.Models
         }
 
         // get all warehouses and all vehicles in this warehouses, or get concret warehouse and vehicle with filter 
-        public async Task<List<Vehicle>> GetVehiclesAsync(string name)
+        public async Task<List<Vehicle>> GetVehiclesAsync()
         {
 
             var builder = new FilterDefinitionBuilder<Warehouse>();
             var filter = builder.Empty; // filter on all warehouses
-            if (!String.IsNullOrWhiteSpace(name))
-            {
-                filter = filter & builder.Regex("Name", new BsonRegularExpression(name));
-            }
+            //if (!String.IsNullOrWhiteSpace(name))
+            //{
+            //    filter = filter & builder.Regex("Name", new BsonRegularExpression(name));
+            //}
             warehouses = await Warehouses.Find(filter).ToListAsync();
 
             foreach (Warehouse warehouse in warehouses)

@@ -1,5 +1,7 @@
+using BackCarShop.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
+using MongoDB.Bson.Serialization;
 
 namespace BackCarShop
 {
@@ -7,6 +9,12 @@ namespace BackCarShop
     {
         public static void Main(string[] args)
         {
+            BsonClassMap.RegisterClassMap<Location>(cm =>
+            {
+                cm.AutoMap();
+                cm.MapMember(l => l._long).SetElementName("long");
+            });
+
             CreateHostBuilder(args).Build().Run();
         }
 
