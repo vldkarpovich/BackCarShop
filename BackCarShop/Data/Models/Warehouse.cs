@@ -1,5 +1,4 @@
-﻿
-using MongoDB.Bson.Serialization.Attributes;
+﻿using MongoDB.Bson.Serialization.Attributes;
 
 namespace BackCarShop.Models
 {

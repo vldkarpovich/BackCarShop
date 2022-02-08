@@ -56,10 +56,25 @@ namespace BackCarShop.Controllers
             }
         }
 
+        [HttpPost("{id}")]
+        public async Task<IActionResult> PostToBasket(int id)
+        {
+            try
+            {
+                var result = await _vehicleService.AddTobasket(id);
+
+                return Ok(result);
+            }
+            catch (Exception Ex)
+            { 
+                var log = Ex.Message;
+                return new BadRequestResult();
+            }
+        }
 
 
-        [HttpPost]
-        public async Task<IActionResult> PostCreateOrder(OrderViewModel orderViewModel)
+        [HttpPut]
+        public async Task<IActionResult> PutCreateOrder(OrderViewModel orderViewModel)
         {
             try
             {

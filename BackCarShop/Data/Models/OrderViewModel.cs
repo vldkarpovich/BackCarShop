@@ -1,8 +1,4 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace BackCarShop.Data.Models
 {
@@ -13,6 +9,6 @@ namespace BackCarShop.Data.Models
         public string LastName { get; set; }
         public string Email { get; set; }
         public string Address { get; set; }
-        public int[] ids { get; set; }
+        public IEnumerable<int> VehicleId_s { get; set; }
     }
 }

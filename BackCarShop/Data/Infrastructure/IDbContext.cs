@@ -1,6 +1,6 @@
-﻿using BackCarShop.Models;
+﻿using BackCarShop.Data.Models;
+using BackCarShop.Models;
 using MongoDB.Driver;
-using System.Collections.Generic;
 
 namespace BackCarShop.Data.Infrastructure
 {
@@ -8,6 +8,7 @@ namespace BackCarShop.Data.Infrastructure
     {
         IMongoCollection<Warehouse> Warehouses { get; }
         IMongoCollection<Order> Orders { get; }
+        IMongoCollection<Basket> Basket { get; }
         void CreateConnection();
     }
 }

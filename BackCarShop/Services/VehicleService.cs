@@ -1,9 +1,9 @@
 ﻿using BackCarShop.Data.Infrastructure;
 using BackCarShop.Data.Models;
-using Microsoft.Extensions.Configuration;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace BackCarShop.Models
@@ -24,11 +24,12 @@ namespace BackCarShop.Models
             {
                 _dbContext.CreateConnection();
                 var builder = new FilterDefinitionBuilder<Warehouse>();
-                var filter = builder.Empty; // filter on all warehouses
-                                            //if (!String.IsNullOrWhiteSpace(name))
-                                            //{
-                                            //    filter = filter & builder.Regex("Name", new BsonRegularExpression(name));
-                                            //}
+                var filter = builder.Empty; 
+                // filter on all warehouses
+                //if (!String.IsNullOrWhiteSpace(name))
+                //{
+                //    filter = filter & builder.Regex("Name", new BsonRegularExpression(name));
+                //}
                 var warehouses = await _dbContext.Warehouses.Find(filter).ToListAsync();
                 var vehicles = new List<Vehicle>();
 
@@ -39,6 +40,7 @@ namespace BackCarShop.Models
                         vehicles.Add(vehicle);
                     }
                 }
+                vehicles.OrderBy(data => data.Date_added);
                 return vehicles;
             }
             catch(Exception ex)
@@ -52,12 +54,16 @@ namespace BackCarShop.Models
         {
             try
             {
+                _dbContext.CreateConnection();
+                var builder = new FilterDefinitionBuilder<Basket>();
+                var filter = builder.Empty;
+
                 double price = 0;
                 var vehicles = await GetVehiclesAsync();
                 var result = new List<Vehicle>();
                 foreach (var vehivle in vehicles)
                 {
-                    foreach (var i in orderView.ids)
+                    foreach (var i in orderView.VehicleId_s)
                     {
                         if (i == vehivle.Id)
                         {
@@ -70,10 +76,60 @@ namespace BackCarShop.Models
                 var order = new Order() { Address = orderView.Address, Email = orderView.Email, FirstName = orderView.FirstName, LastName = orderView.LastName, Price = price, OrderListVehicle = result };
 
                 await _dbContext.Orders.InsertOneAsync(order);
+                await _dbContext.Basket.DeleteOneAsync(filter);
+
             } 
             catch(Exception ex)
             {
                 string log = ex.Message;
+            }
+        }
+
+        public async Task<Basket> AddTobasket(int id)
+        {
+            try
+            {
+                _dbContext.CreateConnection();
+
+                var basket = new Basket();
+                var vehicles = await GetVehiclesAsync();
+
+                var builder = new FilterDefinitionBuilder<Basket>();
+                var filter = builder.Empty;
+                var DbDataBasket = await _dbContext.Basket.Find(filter).ToListAsync();
+
+                if (DbDataBasket != null)
+                {
+                    foreach (var bs in DbDataBasket)
+                    {
+                        foreach (var b in bs.Vehicles)
+                        {
+                            basket.Vehicles.Add(b);
+                        }
+                        basket.TotalPrice += bs.TotalPrice;
+                    }
+                }
+                if (vehicles != null)
+                {
+                    foreach (var vehicle in vehicles)
+                    {
+                        if (vehicle.Id == id)
+                        {
+                            basket.Vehicles.Add(vehicle);
+                            basket.TotalPrice += vehicle.Price;
+                            await _dbContext.Basket.DeleteOneAsync(filter);
+                            await _dbContext.Basket.InsertOneAsync(basket);
+                        }
+
+                    }
+
+                }
+                return basket;
+            }
+            catch (Exception ex)
+            { 
+                string log = ex.Message;
+                return null;
             }
         }
 

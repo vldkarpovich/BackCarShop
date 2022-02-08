@@ -9,5 +9,6 @@ namespace BackCarShop.Models
         Task<List<Vehicle>> GetVehiclesAsync();
         Task<AllVehicleInfoViewModel> GetAllVehicleInfo(int id);
         Task CreateOrder(OrderViewModel orderViewModel);
+        Task<Basket> AddTobasket(int id);
     }
 }

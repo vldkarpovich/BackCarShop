@@ -8,6 +8,6 @@ namespace BackCarShop.Models
         [BsonElement("location")]
         public string Location { get; set; }
         [BsonElement("vehicles")]
-        public List<Vehicle> Vehicles;
-    }
+        public List<Vehicle> Vehicles { get; set; }
+}
 }
