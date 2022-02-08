@@ -1,10 +1,10 @@
+using BackCarShop.Data.Infrastructure;
 using BackCarShop.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using MongoDB.Bson.Serialization;
 
 namespace BackCarShop
 {
@@ -20,8 +20,9 @@ namespace BackCarShop
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddTransient<VehicleService>();
-            services.AddControllers();
+            services.AddScoped<IVehicleService, VehicleService>();
+            services.AddScoped<IDbContext, DbContext>();
+            services.AddControllers().AddNewtonsoftJson();
             services.AddCors();
         }
 
@@ -34,7 +35,7 @@ namespace BackCarShop
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             app.UseRouting();
 
@@ -45,12 +46,6 @@ namespace BackCarShop
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-            });
-
-            BsonClassMap.RegisterClassMap<Location>(cm =>
-            {
-                cm.AutoMap();
-                cm.MapMember(l => l._long).SetElementName("long");
             });
         }
     }

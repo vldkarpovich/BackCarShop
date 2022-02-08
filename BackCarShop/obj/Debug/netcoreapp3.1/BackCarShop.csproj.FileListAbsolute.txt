@@ -51,3 +51,7 @@ C:\Users\vladk\source\repos\BackCarShop\BackCarShop\obj\Debug\netcoreapp3.1\Back
 C:\Users\vladk\source\repos\BackCarShop\BackCarShop\obj\Debug\netcoreapp3.1\BackCarShop.dll
 C:\Users\vladk\source\repos\BackCarShop\BackCarShop\obj\Debug\netcoreapp3.1\BackCarShop.pdb
 C:\Users\vladk\source\repos\BackCarShop\BackCarShop\obj\Debug\netcoreapp3.1\BackCarShop.genruntimeconfig.cache
+C:\Users\vladk\source\repos\BackCarShop\BackCarShop\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.JsonPatch.dll
+C:\Users\vladk\source\repos\BackCarShop\BackCarShop\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
+C:\Users\vladk\source\repos\BackCarShop\BackCarShop\bin\Debug\netcoreapp3.1\Newtonsoft.Json.dll
+C:\Users\vladk\source\repos\BackCarShop\BackCarShop\bin\Debug\netcoreapp3.1\Newtonsoft.Json.Bson.dll
