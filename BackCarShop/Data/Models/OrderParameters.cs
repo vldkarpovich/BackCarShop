@@ -2,7 +2,7 @@
 
 namespace BackCarShop.Data.Models
 {
-    public class OrderViewModel
+    public class OrderParameters
     {
         public int Id { get; set; }
         public string FirstName { get; set; }

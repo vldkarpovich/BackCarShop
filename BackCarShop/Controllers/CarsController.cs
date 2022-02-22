@@ -37,7 +37,8 @@ namespace BackCarShop.Controllers
         }
 
 
-        [HttpGet("{id}")]
+        [HttpGet]
+        [Route("getvehicle")]
         public async Task<IActionResult> GetVehicle(int id)
         {
             try
@@ -74,7 +75,7 @@ namespace BackCarShop.Controllers
 
 
         [HttpPut]
-        public async Task<IActionResult> PutCreateOrder(OrderViewModel orderViewModel)
+        public async Task<IActionResult> PutCreateOrder(OrderParameters orderViewModel)
         {
             try
             {
