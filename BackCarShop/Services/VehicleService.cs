@@ -18,7 +18,7 @@ namespace BackCarShop.Models
         }
 
         // get all warehouses and all vehicles in this warehouses, or get concret warehouse and vehicle with filter 
-        public async Task<List<Vehicle>> GetVehiclesAsync()
+        public async Task<List<Vehicle>> GetVehiclesAsync(VehicleParameters vehicleParam)
         {
             try
             {
@@ -49,8 +49,37 @@ namespace BackCarShop.Models
                 return null;
             }
         }
+
+        public async Task<List<Vehicle>> GetVehiclesAsync()
+        {
+            try
+            {
+                _dbContext.CreateConnection();
+                var builder = new FilterDefinitionBuilder<Warehouse>();
+                var filter = builder.Empty;
+                var warehouses = await _dbContext.Warehouses.Find(filter).ToListAsync();
+                var vehicles = new List<Vehicle>();
+
+                foreach (Warehouse warehouse in warehouses)
+                {
+                    foreach (Vehicle vehicle in warehouse.Cars.Vehicles)
+                    {
+                        vehicles.Add(vehicle);
+                    }
+                }
+                vehicles.OrderBy(data => data.Date_added);
+                return vehicles;
+            }
+            catch (Exception ex)
+            {
+                string log = ex.Message;
+                return null;
+            }
+        }
+
+
         //added new order
-        public async Task CreateOrder(OrderViewModel orderView)
+        public async Task CreateOrder(OrderParameters orderParam)
         {
             try
             {
@@ -63,7 +92,7 @@ namespace BackCarShop.Models
                 var result = new List<Vehicle>();
                 foreach (var vehivle in vehicles)
                 {
-                    foreach (var i in orderView.VehicleId_s)
+                    foreach (var i in orderParam.VehicleId_s)
                     {
                         if (i == vehivle.Id)
                         {
@@ -73,7 +102,7 @@ namespace BackCarShop.Models
                     }
                 }
 
-                var order = new Order() { Address = orderView.Address, Email = orderView.Email, FirstName = orderView.FirstName, LastName = orderView.LastName, Price = price, OrderListVehicle = result };
+                var order = new Order() { Address = orderParam.Address, Email = orderParam.Email, FirstName = orderParam.FirstName, LastName = orderParam.LastName, Price = price, OrderListVehicle = result };
 
                 await _dbContext.Orders.InsertOneAsync(order);
                 await _dbContext.Basket.DeleteOneAsync(filter);
