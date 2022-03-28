@@ -18,7 +18,7 @@ namespace BackCarShop.Models
         }
 
         // get all warehouses and all vehicles in this warehouses, or get concret warehouse and vehicle with filter 
-        public async Task<List<Vehicle>> GetVehiclesAsync(VehicleParameters vehicleParam)
+        public async Task<PagedList<Vehicle>> GetVehiclesAsync(VehicleParameters vehicleParam)
         {
             try
             {
@@ -40,8 +40,10 @@ namespace BackCarShop.Models
                         vehicles.Add(vehicle);
                     }
                 }
-                vehicles.OrderBy(data => data.Date_added);
-                return vehicles;
+
+                var result = PagedList<Vehicle>.ToPagedList(vehicles.OrderBy(data => data.Date_added), vehicleParam.PageNumber, vehicleParam.PageSize);
+                    //vehicles.Skip((vehicleParam.PageNumber - 1) * vehicleParam.PageSize).Take(vehicleParam.PageSize).OrderBy(data => data.Date_added).ToList();
+                return result;
             }
             catch(Exception ex)
             { 
@@ -50,6 +52,8 @@ namespace BackCarShop.Models
             }
         }
 
+
+
         public async Task<List<Vehicle>> GetVehiclesAsync()
         {
             try
@@ -57,6 +61,11 @@ namespace BackCarShop.Models
                 _dbContext.CreateConnection();
                 var builder = new FilterDefinitionBuilder<Warehouse>();
                 var filter = builder.Empty;
+                // filter on all warehouses
+                //if (!String.IsNullOrWhiteSpace(name))
+                //{
+                //    filter = filter & builder.Regex("Name", new BsonRegularExpression(name));
+                //}
                 var warehouses = await _dbContext.Warehouses.Find(filter).ToListAsync();
                 var vehicles = new List<Vehicle>();
 
@@ -114,12 +123,12 @@ namespace BackCarShop.Models
             }
         }
 
-        public async Task<Basket> AddTobasket(int id)
+        public async Task<int> AddTobasket(int id)
         {
             try
             {
                 _dbContext.CreateConnection();
-
+                int count = 0;
                 var basket = new Basket();
                 var vehicles = await GetVehiclesAsync();
 
@@ -138,6 +147,8 @@ namespace BackCarShop.Models
                         basket.TotalPrice += bs.TotalPrice;
                     }
                 }
+
+
                 if (vehicles != null)
                 {
                     foreach (var vehicle in vehicles)
@@ -146,6 +157,8 @@ namespace BackCarShop.Models
                         {
                             basket.Vehicles.Add(vehicle);
                             basket.TotalPrice += vehicle.Price;
+                            Math.Round(basket.TotalPrice, 2);
+                            count = basket.Vehicles.Count();
                             await _dbContext.Basket.DeleteOneAsync(filter);
                             await _dbContext.Basket.InsertOneAsync(basket);
                         }
@@ -153,10 +166,90 @@ namespace BackCarShop.Models
                     }
 
                 }
-                return basket;
+                return count;
             }
             catch (Exception ex)
             { 
+                string log = ex.Message;
+                return 0;
+            }
+        }
+
+        public async Task<Basket> GetBasket()
+        {
+            try
+            {
+                _dbContext.CreateConnection();
+
+                var basket = new Basket();
+                var vehicles = await GetVehiclesAsync();
+
+                var builder = new FilterDefinitionBuilder<Basket>();
+                var filter = builder.Empty;
+                var DbDataBasket = await _dbContext.Basket.Find(filter).ToListAsync();
+
+
+
+                if (DbDataBasket != null)
+                {
+                    foreach (var bs in DbDataBasket)
+                    {
+                        foreach (var b in bs.Vehicles)
+                        {
+                            basket.Vehicles.Add(b);
+                        }
+                        basket.TotalPrice = bs.TotalPrice;
+                    }
+                }
+                return basket;
+            }
+            catch (Exception ex)
+            {
+                string log = ex.Message;
+                return null;
+            }
+        }
+
+        public async Task<Basket> DeleteFromBasket(int id)
+        {
+            try
+            {
+                _dbContext.CreateConnection();
+                var basket = new Basket();
+
+                var builder = new FilterDefinitionBuilder<Basket>();
+                var filter = builder.Empty;
+                var DbDataBasket = await _dbContext.Basket.Find(filter).ToListAsync();
+
+                if (DbDataBasket != null)
+                {
+                    foreach (var bs in DbDataBasket)
+                    {
+                        foreach (var b in bs.Vehicles)
+                        {
+                            basket.Vehicles.Add(b);
+                        }
+                        basket.TotalPrice = bs.TotalPrice;
+                    }
+                }
+
+                if (basket != null)
+                {
+                    var itemToRemove = basket.Vehicles.First(r => r.Id == id);
+                    if (itemToRemove != null)
+                    {
+                        basket.TotalPrice -= itemToRemove.Price;
+                        basket.Vehicles.Remove(itemToRemove);
+                    }
+                }
+
+                await _dbContext.Basket.DeleteOneAsync(filter);
+                await _dbContext.Basket.InsertOneAsync(basket);
+
+                return basket;
+            }
+            catch (Exception ex)
+            {
                 string log = ex.Message;
                 return null;
             }

@@ -6,10 +6,12 @@ namespace BackCarShop.Models
 {
     public interface IVehicleService
     {
-        Task<List<Vehicle>> GetVehiclesAsync(VehicleParameters vehicleParam);
+        Task<PagedList<Vehicle>> GetVehiclesAsync(VehicleParameters vehicleParam);
         Task<List<Vehicle>> GetVehiclesAsync();
         Task<AllVehicleInfoViewModel> GetAllVehicleInfo(int id);
         Task CreateOrder(OrderParameters orderViewModel);
-        Task<Basket> AddTobasket(int id);
+        Task<int> AddTobasket(int id);
+        Task<Basket> GetBasket();
+        Task<Basket> DeleteFromBasket(int id);
     }
 }

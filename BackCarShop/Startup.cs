@@ -17,7 +17,7 @@ namespace BackCarShop
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
+        // This method gets called by the runtime. Use this method to add services to the container.  "x-total-count", "x-page-size", "x-current-page", "x-total-pages", "x-has-next", "x-has-previous"
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddScoped<IVehicleService, VehicleService>();
@@ -39,7 +39,10 @@ namespace BackCarShop
 
             app.UseRouting();
 
-            app.UseCors(builder => builder.AllowAnyOrigin());
+            app.UseCors(builder => builder.AllowAnyOrigin()
+                                          .AllowAnyMethod()
+                                          .AllowAnyHeader()
+                                          .WithExposedHeaders("x-total-count", "x-page-size", "x-current-page", "x-total-pages", "x-has-next", "x-has-previous"));
 
             app.UseAuthorization();
 
