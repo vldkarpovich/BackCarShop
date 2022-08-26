@@ -58,7 +58,7 @@ namespace BackCarShop.Controllers
 
         [HttpGet]
         [Route("getvehicle")]
-        public async Task<IActionResult> GetVehicle(int id)
+        public async Task<IActionResult> GetVehicle([FromQuery] int id)
         {
             try
             {
@@ -78,7 +78,7 @@ namespace BackCarShop.Controllers
 
         [HttpPost]
         [Route("posttobasket")]
-        public async Task<IActionResult> PostToBasket(int id)
+        public async Task<IActionResult> PostToBasket([FromBody]int id)
         {
             try
             {
@@ -136,7 +136,7 @@ namespace BackCarShop.Controllers
 
         [HttpPut]
         [Route("poscreateorder")]
-        public async Task<IActionResult> PutCreateOrder(OrderParameters orderViewModel)
+        public async Task<IActionResult> PutCreateOrder([FromBody]OrderParameters orderViewModel)
         {
             try
             {
